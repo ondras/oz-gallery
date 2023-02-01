@@ -1,0 +1,57 @@
+<!doctype html>
+
+<a href="/">!</a>
+<oz-gallery>
+	<a href="//http.cat/100"><img src="//http.cat/100"></a>
+	<a href="//http.cat/101"><img src="//http.cat/101"></a>
+	<a href="//http.cat/102"><img src="//http.cat/102"></a>
+	<a href="//http.cat/103"><img src="//http.cat/103"></a>
+	<a href="//http.cat/104"><img src="//http.cat/104"></a>
+	<a href="https://www.youtube.com/watch?v=1UOVLdPslmo" data-type="youtube"><img src="https://img.youtube.com/vi/1UOVLdPslmo/default.jpg"></a>
+	<a href="//i.imgur.com/SEQKQZ1.png" data-type="pano"><img src="//i.imgur.com/SEQKQZ1.png"></a>
+</oz-gallery>
+
+
+<style>
+a img {
+	width: 100px;
+	height: 100px;
+}
+
+a[href="/"] {
+	display: inline-flex;
+	width: 100px;
+	height: 100px;
+	align-items: center;
+	justify-content: center;
+	font-size: 50px;
+}
+
+oz-gallery {
+	display: inline-flex;
+}
+</style>
+
+
+<script>
+let g = document.querySelector("oz-gallery");
+g.addEventListener("close", _ => {
+	history.replaceState(null, "", "#");
+});
+
+g.addEventListener("change", _ => {
+	history.replaceState(null, "", `#${g.index}`);
+});
+
+if (location.hash) {
+	let promises = ["oz-gallery", "little-planet"].map(name => customElements.whenDefined(name));
+	Promise.all(promises).then(() => {
+		let i = Number(location.hash.substring(1));
+		g.show(i);
+	});
+}
+
+</script>
+
+<script type="module" src="oz-gallery.js"></script>
+<script type="module" src="https://unpkg.com/little-planet"></script>
