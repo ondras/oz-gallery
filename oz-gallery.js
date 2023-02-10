@@ -119,6 +119,9 @@ class OzGallery extends HTMLElement {
 
 const HTML = `
 <style>
+* {
+	box-sizing: border-box;
+}
 dialog {
 	padding: 0;
 	border: none;
