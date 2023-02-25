@@ -88,7 +88,13 @@ class OzGallery extends HTMLElement {
 	async #showYoutube(src) {
 		let iframe = document.createElement("iframe");
 		iframe.allowFullscreen = true;
-		let id = src.split("v=").pop();
+		let url = new URL(src);
+		let id;
+		if (url.pathname == "/watch") {
+			id = url.searchParams.get("v");
+		} else {
+			id = url.pathname.substring(1);
+		}
 		iframe.src = `https://www.youtube.com/embed/${id}`;
 		this.#showContent(iframe);
 	}
