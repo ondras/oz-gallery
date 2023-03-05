@@ -34,6 +34,10 @@ class OzGallery extends HTMLElement {
 				this.show(index);
 			}
 		});
+
+		window.addEventListener("resize", e => {
+			if (this.#current && this.#current.localName == "little-planet") { syncPanoSize(this.#current); }
+		});
 	}
 
 	show(index) {
@@ -102,9 +106,7 @@ class OzGallery extends HTMLElement {
 	async #showPano(src) {
 		let pano = document.createElement("little-planet");
 		pano.src = src;
-		pano.width = innerWidth * devicePixelRatio;
-		pano.height = innerHeight * devicePixelRatio;
-
+		syncPanoSize(pano);
 		await this.#waitForEvent(pano, "load");
 		this.#showContent(pano);
 	}
@@ -224,6 +226,11 @@ function waitForEvent(node, event, signal) {
 	return new Promise(resolve => {
 		node.addEventListener(event, resolve, {signal, once:true});
 	});
+}
+
+function syncPanoSize(pano) {
+	pano.width = innerWidth * devicePixelRatio;
+	pano.height = innerHeight * devicePixelRatio;
 }
 
 customElements.define("oz-gallery", OzGallery);
