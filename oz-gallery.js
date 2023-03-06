@@ -120,21 +120,28 @@ class OzGallery extends HTMLElement {
 	}
 
 	get index() { return this.#index; }
-	get #links() { return [...this.querySelectorAll("a")]; }
+
+	get #links() {
+		let selector = this.selector || "a";
+		return [...this.querySelectorAll(selector)];
+	}
 	get #prev() { return this.shadowRoot.querySelector(".prev"); }
 	get #next() { return this.shadowRoot.querySelector(".next"); }
 	get #dialog() { return this.shadowRoot.querySelector("dialog"); }
 
 	get loop() { return this.hasAttribute("loop"); }
 	set loop(loop) { loop ? this.setAttribute("loop", "") : this.removeAttribute("loop"); }
-}
 
+	get selector() { return this.getAttribute("selector"); }
+	set selector(selector) { this.setAttribute("selector", selector); }
+}
 
 const HTML = `
 <style>
 * {
 	box-sizing: border-box;
 }
+
 dialog {
 	padding: 0;
 	border: none;
@@ -142,7 +149,7 @@ dialog {
 	max-height: none;
 }
 
-dialog img {
+dialog img, dialog little-planet {
 	display: block;
 	max-width: 100vw;
 	max-height: 100vh;
@@ -154,13 +161,6 @@ dialog iframe {
 	border: none;
 	width: 80vw;
 	aspect-ratio: 16 / 9;
-}
-
-dialog little-planet {
-	display: block;
-	width: 100vw;
-	height: 100vh;
-	height: 100dvh;
 }
 
 dialog::backdrop {
