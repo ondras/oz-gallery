@@ -23,12 +23,12 @@ class OzGallery extends HTMLElement {
 		});
 
 		window.addEventListener("keydown", e => {
-			if (this.#index == -1) { return; }
+			if (!this.#dialog.open) { return; }
 
 			let index = keyToIndex(e.key, this.#index, this.#links.length);
 			if (index === undefined) {
 				return;
-			} else if (index == -1) {
+			} else if (index === null) {
 				this.close();
 			} else {
 				this.show(index);
@@ -42,6 +42,8 @@ class OzGallery extends HTMLElement {
 
 	show(index) {
 		let len = this.#links.length;
+		if (this.loop) { index = (index + len) % len; }
+
 		if (index <= -1 || index >= len) { return; }
 
 		if (this.#abortController) { this.#abortController.abort(); }
@@ -55,8 +57,8 @@ class OzGallery extends HTMLElement {
 		}
 
 		this.#index = index;
-		this.#prev.hidden = (index == 0);
-		this.#next.hidden = (index+1 == len);
+		this.#prev.hidden = !this.loop && (index == 0);
+		this.#next.hidden = !this.loop && (index+1 == len);
 		this.dispatchEvent(new CustomEvent("change"));
 	}
 
@@ -122,6 +124,9 @@ class OzGallery extends HTMLElement {
 	get #prev() { return this.shadowRoot.querySelector(".prev"); }
 	get #next() { return this.shadowRoot.querySelector(".next"); }
 	get #dialog() { return this.shadowRoot.querySelector("dialog"); }
+
+	get loop() { return this.hasAttribute("loop"); }
+	set loop(loop) { loop ? this.setAttribute("loop", "") : this.removeAttribute("loop"); }
 }
 
 
@@ -218,7 +223,7 @@ function keyToIndex(key, index, count) {
 		case "Home": return 0;
 
 		case "End": return count-1;
-		case "Escape": return -1;
+		case "Escape": return null;
 	}
 }
 
