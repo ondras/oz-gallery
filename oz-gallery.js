@@ -98,6 +98,8 @@ class OzGallery extends HTMLElement {
 		let id;
 		if (url.pathname == "/watch") {
 			id = url.searchParams.get("v");
+		} else if (url.pathname.startsWith("/shorts/")) {
+			id = url.pathname.split("/").pop();
 		} else {
 			id = url.pathname.substring(1);
 		}
