@@ -201,7 +201,7 @@ button:not(:hover) { opacity: 0.8; }
 
 </style>
 <slot></slot>
-<dialog>
+<dialog part="dialog">
 	<button class="prev">&lt;</button>
 	<button class="next">&gt;</button>
 </dialog>
