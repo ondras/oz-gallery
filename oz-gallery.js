@@ -26,14 +26,11 @@ class OzGallery extends HTMLElement {
 			if (!this.#dialog.open) { return; }
 
 			let index = keyToIndex(e.key, this.#index, this.#links.length);
-			if (index === undefined) {
-				return;
-			} else if (index === null) {
-				this.close();
-			} else {
-				this.show(index);
-			}
-		});
+			if (index === undefined) { return; }
+
+			e.stopImmediatePropagation(); // there might be other keydown listeners (e.g. <maslo-deck>)
+			(index === null ? this.close() : this.show(index));
+		}, {capture:true});
 
 		window.addEventListener("resize", e => {
 			if (this.#current && this.#current.localName == "little-planet") { syncPanoSize(this.#current); }
@@ -149,25 +146,26 @@ dialog {
 	border: none;
 	max-width: none;
 	max-height: none;
-}
 
-dialog img, dialog little-planet {
-	display: block;
-	max-width: 100vw;
-	max-height: 100vh;
-	max-height: 100dvh;
-}
+	img, little-planet {
+		display: block;
+		max-width: 100vw;
+		max-height: 100vh;
+		max-height: 100dvh;
+	}
 
-dialog iframe {
-	display: block;
-	border: none;
-	width: 80vw;
-	aspect-ratio: 16 / 9;
-}
+	iframe {
+		display: block;
+		border: none;
+		width: 80vw;
+		aspect-ratio: 16 / 9;
+	}
 
-dialog::backdrop {
-	background-color: rgba(0, 0, 0, 0.5);
-	backdrop-filter: blur(5px);
+	&::backdrop {
+		background-color: rgba(0, 0, 0, 0.5);
+		backdrop-filter: blur(5px);
+	}
+
 }
 
 button {
